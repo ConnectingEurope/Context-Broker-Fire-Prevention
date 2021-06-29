@@ -1,0 +1,21 @@
+.row{
+    margin-right: 0px!important;
+    margin-left: 0px!important;
+    
+}
+.blue-background{
+    background-color: #004494;
+}
+.map-background{
+    background-image: url('../../../assets/images/background.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }

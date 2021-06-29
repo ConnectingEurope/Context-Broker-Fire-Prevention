@@ -1,0 +1,43 @@
+<p-card header="Rules">
+    <div class="container-fluid mt-3">
+
+        <!-- Description -->
+        <i class="pi pi-info info-message"></i>
+        <p class="d-inline info-message">
+            {{'Rule description'}}
+        </p>
+
+        <!-- Add service button -->
+        <div class="row justify-content-center mt-4 mb-3">
+            <div class="col-auto">
+                <p-button icon="pi pi-plus" label="Add Rule" (onClick)="onAddRule()"></p-button>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <p-accordion>
+                    <ng-template ngFor let-rule let-i="index" [ngForOf]="rules">
+                        <p-accordionTab #accordionTab [selected]="accordionTabsSelected && i == rules.length - 1"
+                            [transitionOptions]="'0ms'">
+
+                            <!-- AccordionTab header -->
+                            <p-header>
+                                <app-accordion-tab-header [header]="rule.form.get('rule_name').value" [selected]="accordionTab.selected"
+                                    [removable]="true" (remove)="onRemoveRule(rule, i)">
+                                </app-accordion-tab-header>
+                            </p-header>
+
+                            <form [formGroup]="rule.form">       
+                                <!-- Rule -->
+                                <app-rule-form [re] = "re" [rule]="rule" >
+
+                                </app-rule-form>
+                            </form>
+                        </p-accordionTab>
+                    </ng-template>
+                </p-accordion>
+            </div>
+        </div>
+    </div>
+</p-card>

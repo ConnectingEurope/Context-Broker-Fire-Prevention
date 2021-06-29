@@ -1,0 +1,74 @@
+<!-- Dialog for subscriptions -->
+<app-subscriptions-dialog #subscriptionDialog [display]="displaySubs" (hide)="displaySubs=false">
+</app-subscriptions-dialog>
+
+<form [formGroup]="cb.form">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-6">
+
+                <!-- Name -->
+                <div>
+                    <app-input-with-validation [label]="'Name'" [controlName]="'name'" [group]="cb.form"
+                        [required]="true" (changeText)="onNameChange()">
+                    </app-input-with-validation>
+                </div>
+
+                <!-- URL -->
+                <div class="mt-4">
+                    <app-input-with-validation #urlInput [label]="'URL'" [controlName]="'url'" [group]="cb.form"
+                        [required]="true" [hasButton]="true" [buttonIcon]="'pi pi-check'"
+                        (buttonClick)="onCheckContextBroker()" (changeText)="onUrlChange()">
+                    </app-input-with-validation>
+                </div>
+
+                <!-- Services checkbox -->
+                <div class="mt-4">
+                    <p-checkbox label="The Context Broker uses services" binary="true"
+                        [formControl]="cb.form.controls['needServices']">
+                    </p-checkbox>
+                    <i class="ml-2 pi pi-question-circle help-icon"
+                        pTooltip="If the information of the Context Broker is divided in services, please configure them in the Services panel."></i>
+                </div>
+
+                <!-- Historical checkbox -->
+                <div class="mt-5">
+                    <p-checkbox label="Visualize historical data" binary="true"
+                        [formControl]="cb.form.controls['needHistoricalData']">
+                    </p-checkbox>
+                    <i class="ml-2 pi pi-question-circle help-icon"
+                        pTooltip="In order to have access to historical data, both Cygnus URL and STH-Comet URL should be provided."></i>
+                </div>
+
+                <!-- Choose entities button -->
+                <div class="mt-5">
+                    <p-button [disabled]="shouldChooseButtonBeDisabled()" label="Choose entities and attributes"
+                        icon="pi pi-list" (onClick)="onChooseEntities()">
+                    </p-button>
+                </div>
+                <p class="input-warning mt-2" [style.visibility]="chooseWarningVisible ? 'visible' : 'hidden'">
+                    {{'Entities not found (maybe you have entities in specific services)'}}
+                </p>
+
+                <!-- Subscription overview button -->
+                <div class="mt-3">
+                    <p-button [disabled]="shouldSubsButtonBeDisabled()" label="Subscriptions Overview"
+                        icon="fas fa-code" (onClick)="onClickSubscriptions()">
+                    </p-button>
+                </div>
+                <p class="input-warning mt-2" [style.visibility]="subsWarningVisible ? 'visible' : 'hidden'">
+                    {{'No subscriptions found'}}
+                </p>
+
+            </div>
+
+            <!-- Selected entities -->
+            <div class="col-5">
+                <app-attribute-selector [entities]="cb.entities" [selectedEntities]="cb.selectedEntities"
+                    (selectedEntitiesChange)="onSelectedEntitiesChange($event)" (favChange)="onFavChange()">
+                </app-attribute-selector>
+            </div>
+
+        </div>
+    </div>
+</form>

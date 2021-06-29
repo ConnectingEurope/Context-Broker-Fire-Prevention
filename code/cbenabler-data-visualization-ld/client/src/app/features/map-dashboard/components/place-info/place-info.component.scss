@@ -1,0 +1,35 @@
+.overlay{
+    z-index: 1000!important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.info{
+    position: absolute!important;
+    right: 0!important;
+    max-height: 90vh!important;
+    width: fit-content;
+    overflow-x: hidden; 
+    overflow-y: auto; 
+}
+.rounded-circle{
+    height: 33px;
+    width: 33px;
+}
+.legend{
+    background: rgb(40,167,69);
+    background: linear-gradient(90deg, rgba(40,167,69,1) 0%, rgba(88,147,244,1) 25%, rgba(255,193,7,1) 50%, rgba(236,117,40,1) 75%, rgba(220,53,69,1) 100%);
+}
+.low{
+    background-color: rgb(40,167,69);
+}
+.moderate{
+    background-color: rgb(88,147,244);
+}
+.high{
+    background-color: rgb(255,193,7);
+}
+.very-high{
+    background-color: rgb(236,117,40);
+}
+.extreme{
+    background-color: rgb(220,53,69);
+}

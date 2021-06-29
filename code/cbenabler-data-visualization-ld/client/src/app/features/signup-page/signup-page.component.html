@@ -1,0 +1,50 @@
+<div class="row h-100">
+    <div class="w-25 d-none d-lg-block blue-background">
+    </div>
+    <div class="col-9 map-background">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="card center col-12 col-lg-6 col-xl-5 p-3 mx-auto">
+                    <div class="card-header bg-transparent ">
+                        <h5 class="text-center display-4">Sign up new user</h5>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+                            <div class="row form-group bg-white">
+                                <label for="email" class="col-12">Email:</label>
+                                <input type="email" class="col-12 form-control" name="email" id="email" placeholder="name@example.com" formControlName="email" required>
+                            </div>
+                            <div class="row form-group bg-white">
+                                <label for="email" class="col-12">Username:</label>
+                                <input type="email" class="col-12 form-control" name="email" id="email" placeholder="jsmith" formControlName="username" required>
+                            </div>
+                            <div class="row form-group bg-white">
+                                <label for="email" class="col-12">Name:</label>
+                                <input type="email" class="col-12 form-control" name="email" id="email" placeholder="John Smith" formControlName="name" required>
+                            </div>
+                            <div class="row form-group bg-white">
+                                <label for="email" class="col-12">Password: </label>
+                                <input type="password" class="col-12 form-control" name="password" id="password" placeholder="password" formControlName='password' required>
+                            </div>
+                            <div class="row form-group bg-white">
+                                <label for="email" class="col-12">Repeat password: </label>
+                                <input type="password" class="col-12 form-control" name="password" id="password" placeholder="repeat password" formControlName='secondPassword' required>
+                            </div>
+                            <div class="row form-group bg-white">
+                                <p-button type="submit" class="mx-auto" label="Sign up"> </p-button>
+                            </div>
+                        </form>
+                        <div *ngIf="successAlert" class="alert alert-success">
+                            User successfully created.
+                        </div>
+                        <div *ngIf="errorAlert" class="alert alert-danger">
+                            Passwords does not match.
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>  
+</div>
+

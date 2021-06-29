@@ -1,0 +1,36 @@
+<!-- Http loader for the entire application -->
+<ng-http-loader [filteredHeaders]="['Avoid-Http-Interceptor']"></ng-http-loader>
+
+<!-- Toast for the entire application -->
+<p-toast></p-toast>
+
+<!-- Confirm dialog for the entire application -->
+<p-confirmDialog rejectButtonStyleClass="secondary-button"></p-confirmDialog>
+
+<!-- Notifications panel -->
+<!-- <p-overlayPanel #notificationsPanel styleClass="notificationsPanel">
+    <app-notifications></app-notifications>
+</p-overlayPanel> -->
+<div class="d-flex flex-column vh-100">
+
+    <!-- Header -->
+    <div class="w-100" >
+        <p-menubar [model]="menuItems" *ngIf="logged">
+            <button type="button" *ngIf="logged" pButton class="text-white mr-0 bg-transparent border-0" label="Notifications"
+             icon="fas fa-bell" (click)="onNotificationsClick($event)"></button> 
+             <button type="button" *ngIf="!logged" pButton class="text-white mr-0 bg-transparent border-0" label="Sign in"
+             icon="fas fa-sign-in-alt" (click)="onLoginClick()"></button>  
+            <button type="button" *ngIf="logged" pButton class="text-white bg-transparent border-0" label="Create new user"
+            icon="fas fa-user-plus"(click)="onCreateUserClick()"></button>  
+            <button type="button" *ngIf="logged" pButton class="text-white mr-0 bg-transparent border-0" label="Sign out"
+            icon="fas fa-sign-out-alt" (click)="onLogoutClick()"></button>
+             
+        </p-menubar>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-grow-1">
+        <router-outlet></router-outlet>
+    </div>
+
+</div>

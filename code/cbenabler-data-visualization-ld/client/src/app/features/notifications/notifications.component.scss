@@ -1,0 +1,22 @@
+
+.filterButtons{
+    background-color: #fafbfd!important;
+    
+}.notificationPanel{
+    border: solid 1px gray;
+}
+.startNotificationPanel{
+    border-left: solid  3px red!important;
+}
+.endNotificationPanel{
+    border-left: solid 3px green !important;
+}
+iframe{
+    height: calc(100vh - 117.5px);
+    overflow: hidden;
+}
+.row{
+    margin-right: 0px!important;
+    margin-left: 0px!important;
+
+}

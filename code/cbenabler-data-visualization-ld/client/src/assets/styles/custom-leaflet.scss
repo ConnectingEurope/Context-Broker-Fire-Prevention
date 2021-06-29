@@ -1,0 +1,109 @@
+// Leaflet styles.
+
+@import './variables';
+
+/*****************************************************************************
+ Fix map positioning
+*****************************************************************************/
+
+#map {
+    position: fixed !important;
+}
+
+.leaflet-bottom {
+    margin-bottom: 45px;
+}
+
+/*****************************************************************************
+ MarkerCluster
+*****************************************************************************/
+
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+    background-color: $primaryColorWithTransparency;
+}
+
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+    background-color: white;
+}
+
+.marker-cluster span {
+    color: $primaryColor;
+}
+
+/*****************************************************************************
+ GeoSearch
+*****************************************************************************/
+
+div.geosearch a.reset {
+    display: none;
+}
+
+/*****************************************************************************
+ Popup
+*****************************************************************************/
+
+div.leaflet-popup-content {
+    width: 250px !important;
+}
+
+div.leaflet-popup-content-wrapper {
+    color: $textColor;
+    border-color: white !important;
+    border: solid;
+    border-width: 1px;
+    background-color: $primaryLightColor;
+}
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+    background-color: white;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+    color: $textColor;
+    margin-top: 2px;
+    margin-right: 2px;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+    color: $textColor;
+}
+
+div.leaflet-popup-content .ui-scrollpanel-content {
+    font-family: "Helvetica Neue", "Arial", sans-serif !important;
+    font-size: 12px !important;
+}
+
+div.leaflet-popup-content .popupScrollBar .ui-scrollpanel-bar-y {
+    background-color: white;
+    width: 4px;
+    opacity: 1;
+    transition: background-color .3s;
+}
+
+div.leaflet-popup-content .popupScrollBar .ui-scrollpanel-bar-x {
+    display: none;
+}
+
+/*****************************************************************************
+ Tooltip
+*****************************************************************************/
+
+.leaflet-tooltip {
+    color: $textColor;
+    background-color: $primaryLightColor;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px transparent;
+}
+
+.leaflet-tooltip-top:before {
+    border-top-color: transparent;
+}
+
+.leaflet-container {
+    font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+}

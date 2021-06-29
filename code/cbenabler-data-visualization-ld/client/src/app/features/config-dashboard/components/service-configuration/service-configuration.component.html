@@ -1,0 +1,103 @@
+<!-- Dialog for subscriptions -->
+<app-subscriptions-dialog #subscriptionDialog [display]="displaySubs" (hide)="displaySubs=false">
+</app-subscriptions-dialog>
+
+<p-card header="Services">
+    <div class="container-fluid mt-3">
+
+        <!-- Description -->
+        <i class="pi pi-info info-message"></i>
+        <p class="d-inline info-message">
+            {{'The services of a Context Broker consist on a logical layer for the separation of the information
+            the Context Broker contains into different paths. The services are usually used to provide an extra level
+            of security to the information of the Context Broker.'}}
+        </p>
+
+        <!-- Add service button -->
+        <div class="row justify-content-center mt-4 mb-3">
+            <div class="col-auto">
+                <p-button icon="pi pi-plus" label="Add Service" (onClick)="onAddService()"></p-button>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <p-accordion>
+                    <ng-template ngFor let-service let-i="index" [ngForOf]="cb.services">
+                        <p-accordionTab #accordionTab [selected]="accordionTabsSelected && i == cb.services.length - 1"
+                            [transitionOptions]="'0ms'">
+
+                            <!-- AccordionTab header -->
+                            <p-header>
+                                <app-accordion-tab-header [header]="service.header" [selected]="accordionTab.selected"
+                                    [removable]="true" (remove)="onRemoveService(service, i)">
+                                </app-accordion-tab-header>
+                            </p-header>
+
+                            <form [formGroup]="service.form">
+                                <div class="container-fluid my-4">
+                                    <div class="row justify-content-center">
+                                        <div class="col-6">
+
+                                            <!-- Service -->
+                                            <div>
+                                                <app-input-with-validation [label]="'Service'" [controlName]="'service'"
+                                                    [group]="service.form" [required]="true"
+                                                    (changeText)="onServiceConfigChange(service)"
+                                                    tooltipText="This field refers to the header: fiware-service.">
+                                                </app-input-with-validation>
+                                            </div>
+
+                                            <!-- Service path -->
+                                            <div class="mt-4">
+                                                <app-input-with-validation [label]="'Service Path'"
+                                                    [controlName]="'servicePath'" [group]="service.form"
+                                                    (changeText)="onServiceConfigChange(service)"
+                                                    tooltipText="This field refers to the header: fiware-servicePath. This service path must start by /">
+                                                </app-input-with-validation>
+                                            </div>
+
+                                            <!-- Choose entities button -->
+                                            <div class="mt-4">
+                                                <p-button [disabled]="shouldChooseButtonBeDisabled(service)"
+                                                    label="Choose entities and attributes" icon="pi pi-list"
+                                                    (onClick)="onChooseEntities(service)">
+                                                </p-button>
+                                                <p class="input-warning mt-2"
+                                                    [style.visibility]="chooseWarningVisible ? 'visible' : 'hidden'">
+                                                    {{'Entities not found in this service'}}
+                                                </p>
+                                            </div>
+
+                                            <!-- Subscription overview button -->
+                                            <div class="mt-4">
+                                                <p-button [disabled]="shouldSubsButtonBeDisabled(service)"
+                                                    label="Subscriptions Overview" icon="fas fa-code"
+                                                    (onClick)="onClickSubscriptions(service)">
+                                                </p-button>
+                                            </div>
+                                            <p class="input-warning mt-2"
+                                                [style.visibility]="subsWarningVisible ? 'visible' : 'hidden'">
+                                                {{'No subscriptions found'}}
+                                            </p>
+
+                                        </div>
+
+                                        <!-- Selected entities -->
+                                        <div class="col-5">
+                                            <app-attribute-selector [entities]="service.entities"
+                                                [selectedEntities]="service.selectedEntities"
+                                                (selectedEntitiesChange)="onSelectedEntitiesChange($event, service)"
+                                                (favChange)="onFavChange()"></app-attribute-selector>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </p-accordionTab>
+                    </ng-template>
+                </p-accordion>
+            </div>
+        </div>
+    </div>
+</p-card>

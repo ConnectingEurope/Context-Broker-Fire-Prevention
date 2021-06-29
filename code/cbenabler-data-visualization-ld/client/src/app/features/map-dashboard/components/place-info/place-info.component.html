@@ -1,0 +1,88 @@
+<div class="rounded-lg bg-light overlay info mt-2 mr-3">
+    <h2 class="text-center mt-3">Information</h2>
+    <hr class="w-100">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="container mx-4 overlay rounded-lg bg-light py-1 my-2">
+                <div class="row">
+                    <div class="col-9">
+                        <h4 class="text-left mt-2">Smoke detected</h4>
+                    </div>
+                    <div class="col-3">
+                        <div class="rounded-circle float-right mt-1" 
+                        [ngClass]="{'bg-success': smokeEntity.smokeDetected === false,
+                                    'bg-danger': smokeEntity.smokeDetected === true}"></div>
+                    </div>
+                </div>               
+            </div>
+        </div>
+        <div class="row">
+            <div class="container mx-4 overlay rounded-lg bg-light py-1 my-2">
+                <div class="row">
+                    <div class="col-9">
+                        <h4 class="text-left align-middle mt-2">Dry detected</h4>
+                    </div>
+                    <div class="col-3">
+                        <div class="rounded-circle float-right mt-1"
+                        [ngClass]="{'bg-success': forestEntity.dryDetected === false,
+                                    'bg-danger': forestEntity.dryDetected === true}"></div>
+                    </div>
+                </div>      
+            </div>
+        </div>
+        <div class="row">
+            <div class="container mx-4 overlay rounded-lg bg-light py-1 my-2">
+                <div class="row">
+                    <div class="col-9">
+                        <h4 class="text-left align-middle mt-2">Fire Weather Index (FWI)</h4>
+                    </div>
+                    <div class="col-3 pl-0"> 
+                        <div class="rounded-circle float-right mt-1"
+                        [ngClass]="{'low': fireEntity.fireWeatherIndex < 5,
+                                    'moderate': fireEntity.fireWeatherIndex >= 5 && fireEntity.fireWeatherIndex < 14,
+                                    'high': fireEntity.fireWeatherIndex >= 14 && fireEntity.fireWeatherIndex < 21,
+                                    'very-high': fireEntity.fireWeatherIndex >= 21 && fireEntity.fireWeatherIndex < 33,
+                                    'extreme': fireEntity.fireWeatherIndex > 33}"></div>
+                        <h3 class="font-weight-normal mt-1">{{fireEntity.fireWeatherIndex| number : '1.1-1'}}</h3>
+                    </div>
+                </div> 
+                <div class="row mt-3">
+                    <div class="col"><p class="text-center mb-0">Moderate</p></div>
+                    <div class="col"><p class="mb-0 ml-3">Very high</p></div>
+                </div>   
+                <div class="row">
+                    <div class="w-100 py-2 legend mx-4"></div>
+                </div>
+                <div class="row">
+                    <div class="col"><p>Low</p></div>
+                    <div class="col"><p class="text-center">High</p></div>
+                    <div class="col"><p class="text-right">Extreme</p></div>
+                </div>     
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="container mx-4 mb-3">
+                <div class="row">
+                    <div class="col-5 overlay rounded-lg bg-light py-3 px-0 my-2 mr-auto">
+                        <h6 class="text-center mt-2 mb-3">Daily Severity Rate (DSR)</h6>
+                        <h1 class="text-center  mt-2 font-weight-normal">{{fireEntity.dailySeverityRating | number : '1.2-2'}}</h1>
+                    </div>
+                    <div class="col-5 overlay rounded-lg bg-light py-3 my-2 ml-auto">
+                        <h6 class="text-center mt-2 mb-3">Smoke detected confidence</h6>
+                        <h1 class="text-center mt-2 font-weight-normal">{{smokeEntity.smokeDetectedConfidence * 100 | number : '1.2-2'}}%</h1>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-5 overlay rounded-lg bg-light py-3 px-0 my-2 mr-auto">
+                        <h6 class="text-center text-justify mt-2 mb-3">Dry percentage</h6>
+                        <h1 class="text-center  mt-2 font-weight-normal">{{forestEntity.dryLeaves * 100 | number : '1.2-2'}}%</h1>
+                    </div>
+                    <div class="col-5 overlay rounded-lg bg-light py-3 my-2 ml-auto">
+                        <h6 class="text-center text-justify mt-2 mb-3">Green percentage</h6>
+                        <h1 class="text-center mt-2 font-weight-normal">{{forestEntity.greenLeaves * 100 | number : '1.2-2'}}%</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

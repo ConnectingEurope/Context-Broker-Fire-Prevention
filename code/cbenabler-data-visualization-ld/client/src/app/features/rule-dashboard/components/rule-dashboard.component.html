@@ -1,0 +1,44 @@
+<div class="container-fluid mt-3 mb-4">
+
+    <div class="row justify-content-center mt-3">
+
+        <!-- Apply configuration button -->
+        <div class="col-auto">
+            <p-button icon="pi pi-check" label="Apply Rules" 
+                (onClick)="onApplyConfiguration()">
+            </p-button>
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center my-2">
+        <div class="col-auto">
+            <!-- Advertisement for unsaved changes
+            <div [style.visibility]="shouldAdvertisementBeDisplayed() ? 'visible' : 'hidden'">
+                <p-message severity="warn"
+                    text="There are unsaved changes. Please, apply the configuration to confirm them."></p-message>
+            </div>
+                 -->
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-10 col-xl-8">  
+            <form [formGroup]="ruleEngine.form">
+               
+                <div class="row justify-content-center">
+                    <app-input-with-validation #urlInput [label]="'URL'" [controlName]="'url'" [group]="ruleEngine.form"
+                        [required]="true" [hasButton]="true" [buttonIcon]="'pi pi-check'"
+                        (buttonClick)="onCheckRuleEngine()" (changeText)="onUrlChange()">
+                    </app-input-with-validation>
+                </div>
+
+                <div class="my-4">
+                    <app-rules-configuration #ruleConfiguration [re]="ruleEngine" [rules]="rules">
+
+                    </app-rules-configuration>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

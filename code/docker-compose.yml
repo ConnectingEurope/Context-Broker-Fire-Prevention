@@ -1,0 +1,308 @@
+version: "3.5"
+services:
+  orion-ld:
+    image: fiware/orion-ld:${ORION_VERSION}
+    hostname: orion-ld
+    container_name: fiware-orion-ld-container
+    depends_on:
+      - mongo-db
+    expose:
+      - "${ORION_PORT}"
+    ports:
+      - "${ORION_PORT}:${ORION_PORT}"
+    volumes:
+      - "${ROOT_VOLUME_PATH}/fiware/ocb-ld/logs/:/temp/"
+    restart: always
+    command: -dbhost mongo-db -logLevel DEBUG
+    healthcheck:
+      test: curl --fail -s http://orion-ld:${ORION_PORT}/version || exit 1
+      interval: 5s
+
+  elasticsearch-master:
+    image: elasticsearch:${ELASTICSEARCH_VERSION}
+    container_name: elasticsearch-container
+    ports:
+      - "${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}"
+    expose:
+      - "${ELASTICSEARCH_PORT}"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    networks:
+      - default
+    volumes:
+      - "${ROOT_VOLUME_PATH}/elastic/elasticsearch/data_storage:/usr/share/elasticsearch/data"
+    restart: always
+    environment:
+      - node.name=elasticsearch-master
+      - discovery.type=single-node
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail elasticsearch-container:9200/_cluster/health || exit 1"]
+      interval: 30s
+  
+  kibana:
+    image: kibana:${KIBANA_VERSION}
+    container_name: kibana-container
+    ports:
+      - "${KIBANA_PORT}:${KIBANA_PORT}"
+    expose:
+      - "${KIBANA_PORT}"
+    depends_on:
+      - elasticsearch-master
+    environment:
+      - "ELASTICSEARCH_URL=http://elasticsearch-master:${ELASTICSEARCH_PORT}"
+      - "ELASTICSEARCH_HOSTS=http://elasticsearch-master:${ELASTICSEARCH_PORT}"
+    networks:
+      - default
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail kibana-container:5601/app/home || exit 1"]
+      interval: 30s
+      
+  mongo-db:
+    image: mongo:${MONGO_DB_VERSION}
+    hostname: mongo-db
+    container_name: mongo-db-container
+    expose:
+      - "${MONGO_DB_PORT}"
+    ports:
+      - "${MONGO_DB_PORT}:${MONGO_DB_PORT}"
+    restart: always
+    command: --bind_ip_all --smallfiles --nojournal
+    volumes:
+      - "${ROOT_VOLUME_PATH}/mongo-db/_data:/data"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo-db-container:27017/productiondb --quiet
+      interval: 30s
+
+  mysql-db:
+    image: mysql:${SQL_VERSION}
+    hostname: mysql-db
+    container_name: db-mysql-container
+    expose:
+      - '${SQL_PORT}'
+    ports:
+      - '${SQL_PORT}:${SQL_PORT}'
+    networks:
+      default:
+        ipv4_address: 172.20.1.6
+    secrets:
+      - user-db-password
+      - root-db-password
+    environment:
+      - 'MYSQL_USER=${MYSQL_USER}'
+      - 'MYSQL_PASSWORD=/run/secrets/user-db-password'
+      - 'MYSQL_DATABASE=${MYSQL_DATABASE}'
+      - 'MYSQL_ROOT_PASSWORD_FILE=/run/secrets/root-db-password'
+      - 'MYSQL_ROOT_HOST=172.20.1.15'
+    restart: always
+    volumes:
+      - "${ROOT_VOLUME_PATH}/mysql-db/_data:/var/lib/mysql"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin -h 'localhost' -u ${MYSQL_USER} -p${MYSQL_PASSWORD} ping --silent"]
+      interval: 30s
+      
+  cbenabler-server:
+    build: ./cbenabler-data-visualization-ld/server
+    hostname: cbenabler-server
+    container_name: cbenabler-server-container
+    expose:
+      - "${ENABLER_SERVER_PORT}"
+    ports:
+      - ${ENABLER_SERVER_PORT}:${ENABLER_SERVER_PORT}
+    restart: always
+    healthcheck:
+      test: wget localhost:3000 -q -O - || exit 1
+      interval: 5s
+
+  cbenabler-client:
+    build: ./cbenabler-data-visualization-ld/client
+    hostname: cbenabler-client
+    container_name: cbenabler-client-container
+    depends_on:
+      - cbenabler-server
+    ports:
+      - ${ENABLER_PORT}:${ENABLER_PORT}
+    restart: always
+    healthcheck:
+      test: wget localhost -q -O - || exit 1
+      interval: 5s
+      
+  flask_server:
+    build: ./api
+    hostname: flask-server
+    container_name: flask-server-container
+    depends_on:
+      - mysql-db
+    expose:
+      - "${FLASK_SERVER_PORT}"
+    ports:
+      - "${FLASK_SERVER_PORT}:${FLASK_SERVER_PORT}"
+    volumes:
+      - "${SOURCE_PATH}/rule_engine:/app/rule_engine"
+      - "${SOURCE_PATH}/algorithms:/app/algorithms"
+      - "${SOURCE_PATH}/utils:/app/utils"
+      - "${SOURCE_PATH}/config:/app/config"
+      - "${SOURCE_PATH}/connectors:/app/connectors"
+      - "${SOURCE_PATH}/core:/app/core"
+    restart: always
+    healthcheck:
+      test: curl --fail -s http://flask-server-container:5000/health || exit 1
+      interval: 1m
+      start_period: 1m
+      
+  smoke-detector:
+    build: ./smoke_detector
+    hostname: smoke-detector
+    container_name: smoke-detector-container
+    restart: always
+    volumes:
+      - type: bind
+        source: ${WATCH_FOLDER_PATH_SMOKE}
+        target: /app/listen_folder
+      - type: bind
+        source: ${RECEIVE_FOLDER_PATH_SMOKE}
+        target: /app/receive_images
+      - type: bind
+        source: ${DETECTED_FOLDER_PATH_SMOKE}
+        target: /app/smoke_detected
+      - type: bind
+        source: ${DELETE_IMAGE_FOLDER_PATH_SMOKE}
+        target: /app/deleted_images
+      - "${SOURCE_PATH}/rule_engine:/app/rule_engine"
+      - "${SOURCE_PATH}/core:/app/core"
+      - "${SOURCE_PATH}/utils:/app/utils"
+      - "${SOURCE_PATH}/config:/app/config"
+      - "${SOURCE_PATH}/connectors:/app/connectors"
+      
+  dry-trees-detector:
+    build: ./dry_trees_detector
+    hostname: dry-trees-detector
+    container_name: dry-trees-detector-container
+    restart: always
+    volumes:
+      - type: bind
+        source: ${WATCH_FOLDER_PATH_DRY}
+        target: /app/listen_folder
+      - type: bind
+        source: ${CSV_FOLDER_DRY}
+        target: /app/processed_data
+      - type: bind
+        source: ${RECEIVE_FOLDER_PATH_DRY}
+        target: /app/receive_data
+      - type: bind
+        source: ${DETECTED_FOLDER_PATH_DRY}
+        target: /app/dry_detected
+      - type: bind
+        source: ${DELETE_VIDEO_FOLDER_PATH_DRY}
+        target: /app/deleted_images
+      - "${SOURCE_PATH}/rule_engine:/app/rule_engine"
+      - "${SOURCE_PATH}/core:/app/core"
+      - "${SOURCE_PATH}/utils:/app/utils"
+      - "${SOURCE_PATH}/config:/app/config"
+      - "${SOURCE_PATH}/connectors:/app/connectors"
+      
+  context-providers:
+    build: ./context_providers
+    hostname: context-providers
+    container_name: context-providers-container
+    restart: always
+    volumes:
+      - "${SOURCE_PATH}/core:/app/core"
+      - "${SOURCE_PATH}/utils:/app/utils"
+      - "${SOURCE_PATH}/config:/app/config"
+      - "${SOURCE_PATH}/connectors:/app/connectors"
+      - "${SOURCE_PATH}/algorithms:/app/algorithms"
+
+  camera-receiver:
+    build: ./camera_receiver
+    hostname: camera-receiver
+    container_name: camera-receiver-container
+    restart: always
+    volumes:
+      - type: bind
+        source: ${WATCH_FOLDER_PATH_SMOKE}
+        target: /app/receive_images
+      - "${SOURCE_PATH}/config:/app/config"
+      
+  mqtt-client:
+    build: ./mqtt_client
+    hostname: mqtt-client
+    container_name: mqtt-client-container
+    restart: always
+    volumes:
+      - "${SOURCE_PATH}/core:/app/core"
+      - "${SOURCE_PATH}/utils:/app/utils"
+      - "${SOURCE_PATH}/config:/app/config"
+      - "${SOURCE_PATH}/connectors:/app/connectors"
+      
+  zookeeper:
+    image: bitnami/zookeeper:${ZOO_VERSION}
+    hostname: zookeeper
+    container_name: zookeeper-container
+    restart: always
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    volumes:
+      - "${ROOT_VOLUME_PATH}/zoo/data:/var/lib/zookeeper/data"
+      - "${ROOT_VOLUME_PATH}/zoo/log:/var/lib/zookeeper/log"
+    healthcheck:
+      test: echo srvr | nc localhost 2181 | grep Mode
+      interval: 1m      
+
+  nifi:
+    image: apache/nifi:${NIFI_VERSION}
+    hostname: nifi
+    container_name: nifi-container
+    ports:
+      - '${NIFI_PORT}:${NIFI_PORT}'
+    expose:
+      - '${NIFI_PORT}'
+    restart: always
+    environment:
+      - NIFI_WEB_HTTP_PORT=${NIFI_PORT}
+      - NIFI_CLUSTER_IS_NODE=true
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=${NIFI_CLUSTER_NODE_PROTOCOL_PORT}
+      - NIFI_ZK_CONNECT_STRING=zookeeper:2181
+      - NIFI_ELECTION_MAX_WAIT=1 min
+    volumes:
+      - "${ROOT_VOLUME_PATH}/nifi/templates/:/opt/nifi/nifi-current/nifi-custom-templates"
+    healthcheck:
+      test: curl --fail -s http://nifi:${NIFI_PORT}/nifi-api/system-diagnostics || exit 1
+      interval: 1m
+      start_period: 2m
+  
+  ftpd-server:
+    image: stilliard/pure-ftpd
+    container_name: ftpd-container
+    ports:
+      - "21:21"
+      - "30000-30009:30000-30009"
+    volumes:
+      - "${ROOT_VOLUME_PATH}/ftpd/data:/home/dron"
+      - "${ROOT_VOLUME_PATH}/ftpd/passwd:/etc/pure-ftpd/passwd"
+      - "${ROOT_VOLUME_PATH}/ftpd/ssl:/etc/ssl/private"
+    environment:
+      PUBLICHOST: "localhost"
+      FTP_USER_NAME: example
+      FTP_USER_PASS: pass1234
+      FTP_USER_HOME: /images
+      FTP_PASSIVE_PORTS: 30000:30009
+      #ADDED_FLAGS: "--tls=2"
+    restart: always
+      
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.20.1.0/24
+
+secrets:
+  root-db-password:
+    file: db/silvan_db_root_password.txt
+  user-db-password:
+    file: db/silvan_db_user_password.txt

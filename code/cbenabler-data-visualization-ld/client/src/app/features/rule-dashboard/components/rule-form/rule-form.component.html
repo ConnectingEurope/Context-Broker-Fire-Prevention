@@ -1,0 +1,58 @@
+<form [formGroup]="rule.form">
+    <div class="container-fluid my-4">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class ="mt-4">
+                    <app-input-with-validation [label]="'Name'" [controlName]="'rule_name'" [group]="rule.form"
+                        [required]="true">
+                    </app-input-with-validation>
+                </div>
+                <div class ="mt-4">
+                    <app-input-with-validation [label]="'Service'" [controlName]="'service_name'" [group]="rule.form"
+                        [required]="true" [hasButton]="true" [buttonIcon]="'pi pi-check'" (buttonClick)="onCheckService()">
+                    </app-input-with-validation>
+                </div>
+                <div class ="mt-4" *ngIf="attributesAvailable">
+                    <h6>Attribute*</h6>
+                    <p-dropdown [options]="attributes"  formControlName="attribute_name" required="true" placeholder="Select Attribute"></p-dropdown>
+
+                    <!-- <p-dropdown [options]="selectItems" [(ngModel)]="selectedAttribute" (onChange)="onChange()"></p-dropdown> -->
+                </div>
+                <div class ="mt-4">
+                    <h6>Operator*</h6>
+                    <p-dropdown [options]="operators" formControlName="operator" required="true" placeholder="Select Operator"></p-dropdown>
+                </div>
+            
+                <div class ="mt-4">
+                    <app-input-with-validation [label] = "'Threshold'" [controlName]="'threshold'" [group] ="rule.form"
+                        [required]="true"> 
+                    </app-input-with-validation>
+                </div>
+                
+            </div>
+            <div class="col-4">
+                <div class = " mt-4 " *ngIf="categoriesAvailable" >
+                    <h6>Category*</h6>
+                    <p-dropdown [options]="selectCategories"  formControlName="value_category" required="true" placeholder="Select Category" (onChange)="onChangeCategory()" ></p-dropdown>
+                
+                </div>
+                <div class ="mt-4" *ngIf="subcategoriesAvailable" >
+                    <h6>Subcategory*</h6>
+                    <p-dropdown [options]="selectSubcategories" formControlName="value_subcategory" required="true" placeholder="Select Subcategory" ></p-dropdown>
+                </div>
+                <div class ="mt-4" *ngIf="severityAvailable" > 
+                    <h6>Severity*</h6>
+                    <p-dropdown [options]="severities" formControlName="value_severity" required="true" placeholder="Select Severity"></p-dropdown>
+                </div> 
+                <div class ="mt-4">
+                    <app-input-with-validation [label]="'Recurrence'" [controlName]="'recurrence_seconds'" [group]="rule.form"
+                        [required]="true">
+                    </app-input-with-validation>
+            
+                </div>
+            </div>
+        </div>       
+    </div>
+
+    
+</form>
