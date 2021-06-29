@@ -3,9 +3,9 @@
 ![License](https://img.shields.io/github/license/ConnectingEurope/Context-Broker-Data-Visualisation)
 ![NGSI LD](https://img.shields.io/badge/NGSI-LD-red.svg)
 
-The **Context Broker Fire Prevention** is a **project** made up of different components that help public organizations monitor the state of their forests, detect possible fires early and take preventive actions using Context Broker as the main core. It provides the following features:
+The **Context Broker Fire Prevention** is a **project** made up of different components using Context Broker as the main core that help public organisations monitor the state of their forests, detect possible fires early and take preventive actions. It provides the following features:
 
-- **Real-time data** visualisation through geo-localized sensors on a map, based on the information from the **Orion LD Context Broker**.
+- **Real-time data** visualisation through geo-localised sensors on a map, based on the information from the **Orion LD Context Broker**.
 
 - **Historical data** visualisation for the sensors in table and graph formats, taking advantage of historical data tools like **Kibana**.
 
