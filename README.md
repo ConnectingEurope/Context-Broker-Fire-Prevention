@@ -21,7 +21,7 @@ The **Context Broker Fire Prevention** is a **project** made up of different com
 
 For more information, read the [Objective](#objective) section.
 
-For the visualisation layer, the [Context Broker Data Visualisation Enabler](https://github.com/ConnectingEurope/Context-Broker-Data-Visualisation) has been reused, which has been adapted to be compatible with NGSI-LD. The Context Broker Data Visualisation is a [FIWARE](https://fiware.org) Generic Enabler.
+For the visualisation layer, the [Context Broker Data Visualisation Enabler](https://github.com/ConnectingEurope/Context-Broker-Data-Visualisation) has been reused, which has been adapted to be compatible with NGSI-LD. The Context Broker Data Visualisation is a [CEF Generic Enabler](https://ec.europa.eu/cefdigital/wiki/display/CEFDIGITAL/CEF+Enablers).
 
 You can find more info at the [FIWARE developers](https://developers.fiware.org/) website and the [FIWARE](https://fiware.org/) website.
 
