@@ -3,6 +3,7 @@
 ![License](https://img.shields.io/github/license/ConnectingEurope/Context-Broker-Data-Visualisation)
 ![NGSI LD](https://img.shields.io/badge/NGSI-LD-red.svg)
 
+**Please note that support questions will not be monitored during the summer period of July and August. **
 
 The **Context Broker Fire Prevention** is a **project** made up of different components using Context Broker as the main core that help public organisations monitor the state of their forests, detect possible fires early and take preventive actions. It provides the following features:
 
